@@ -5,7 +5,6 @@ import { Visualizer } from './components/Visualizer';
 import { Results } from './components/Results';
 import { HistoryList } from './components/HistoryList';
 import { FrequencyGraph } from './components/FrequencyGraph'; // [NEW]
-import { AudioEngine } from './audio/Engine';
 import { Generator } from './audio/Generator';
 import { Recorder } from './audio/Recorder';
 import { Analyzer } from './audio/Analyzer';
@@ -14,15 +13,10 @@ import type { TestRecord } from './utils/HistoryStorage';
 import { AudioAnalysisLogic } from './audio/AnalysisLogic';
 
 function App() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const engine = useMemo(() => AudioEngine.getInstance(), []);
   const generator = useMemo(() => new Generator(), []);
   const recorder = useMemo(() => new Recorder(), []);
-  // We use two analyzers? Or just input. Let's record input.
-  // Actually, we might want to see output too, but let's focus on input visual first.
   const inputAnalyzer = useMemo(() => new Analyzer(), []);
 
-  const [isStarted, setIsStarted] = useState(false);
   const [resultBuffer, setResultBuffer] = useState<AudioBuffer | null>(null);
   const [history, setHistory] = useState<TestRecord[]>([]);
   // We need to know context for saving history (channel/type).
@@ -38,7 +32,6 @@ function App() {
   }, []);
 
   const handleTestComplete = async (buffer: AudioBuffer, type: 'tone' | 'sweep', channel: 'left' | 'right' | 'both') => {
-    setIsStarted(false);
     setResultBuffer(buffer);
     setViewingRecord(null);
 
@@ -57,7 +50,6 @@ function App() {
   const handleStop = async (type: 'tone' | 'sweep', channel: 'left' | 'right' | 'both') => {
     // This wrapper is needed because ControlPanel calls onStop. 
     // We actually need ControlPanel to pass back data on stop.
-    setIsStarted(false);
     generator.stop();
     try {
       const buffer = await recorder.stop();
@@ -99,7 +91,7 @@ function App() {
           <div>
             <div style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '1rem', border: '1px solid #334155' }}>
               <ControlPanel
-                onStart={() => setIsStarted(true)}
+                onStart={() => { }}
                 onStop={(type, channel) => handleStop(type as any, channel as any)}
                 generator={generator}
                 recorder={recorder}

@@ -11,7 +11,7 @@ export class Analyzer {
         this.analyserNode = this.engine.getContext().createAnalyser();
         this.analyserNode.fftSize = fftSize;
         this.bufferLength = this.analyserNode.frequencyBinCount;
-        this.dataArray = new Uint8Array(this.bufferLength) as any;
+        this.dataArray = new Uint8Array(this.bufferLength);
     }
 
     public connectSource(source: AudioNode) {
@@ -23,12 +23,12 @@ export class Analyzer {
     }
 
     public getFrequencyData(): Uint8Array {
-        this.analyserNode.getByteFrequencyData(this.dataArray);
+        this.analyserNode.getByteFrequencyData(this.dataArray as Uint8Array<ArrayBuffer>);
         return this.dataArray;
     }
 
     public getTimeDomainData(): Uint8Array {
-        this.analyserNode.getByteTimeDomainData(this.dataArray);
+        this.analyserNode.getByteTimeDomainData(this.dataArray as Uint8Array<ArrayBuffer>);
         return this.dataArray;
     }
 
