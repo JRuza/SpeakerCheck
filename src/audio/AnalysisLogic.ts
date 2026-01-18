@@ -10,7 +10,7 @@ export class AudioAnalysisLogic {
      */
     public static computeFrequencyResponse(
         buffer: AudioBuffer,
-        sweepDuration: number = 5,
+        sweepDuration: number = 10, // Updated to match new sweep duration
         startFreq: number = 20,
         endFreq: number = 20000
     ): AnalysisResult {

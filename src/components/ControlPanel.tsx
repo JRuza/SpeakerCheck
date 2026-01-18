@@ -32,7 +32,7 @@ export function ControlPanel({ onStart, onStop, generator, recorder, inputAnalyz
             if (testType === 'tone') {
                 generator.playSine(1000); // 1kHz test
             } else {
-                generator.playSweep(20, 20000, 5); // 5s sweep
+                generator.playSweep(20, 20000, 10); // 10s sweep (extended for better problem detection)
             }
 
             setIsPlaying(true);
