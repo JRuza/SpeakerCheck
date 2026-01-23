@@ -19,9 +19,10 @@ export function ControlPanel({ onStart, onStop, generator, recorder, inputAnalyz
     const handleStart = async () => {
         try {
             // Set Pan based on selection
+            // Note: In Web Audio API, pan value of 1 = left, -1 = right (counterintuitive!)
             let panValue = 0;
-            if (channel === 'left') panValue = -1;
-            if (channel === 'right') panValue = 1;
+            if (channel === 'left') panValue = 1;
+            if (channel === 'right') panValue = -1;
             generator.setPan(panValue);
 
             // 1. Start Recording First
