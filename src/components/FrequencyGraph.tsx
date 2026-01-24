@@ -80,21 +80,6 @@ export function FrequencyGraph({ data }: FrequencyGraphProps) {
             return ((fLog - minLog) / (maxLog - minLog)) * w;
         };
 
-        // Draw Ideal Line (Flat at roughly 0.5 magnitude for visual reference)
-        // Assuming generator volume was 0.5.
-        ctx.strokeStyle = '#4ade80'; // Green
-        ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        const idealY = h - (0.5 * h); // Middle
-        ctx.moveTo(0, idealY);
-        ctx.lineTo(w, idealY);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#4ade80';
-        ctx.font = '12px Inter';
-        ctx.fillText("Ideal Reference", 10, idealY - 5);
-
-
         // Draw Actual Curve
         ctx.strokeStyle = '#38bdf8'; // Blue
         ctx.lineWidth = 2;
