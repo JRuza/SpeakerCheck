@@ -195,8 +195,18 @@ function DeviationGraph({ data }: { data: AnalysisResult }) {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Calculate deviation from ideal (0.5 magnitude = 0dB reference)
-        const idealMagnitude = 0.5;
+        // Calculate deviation from average magnitude (shows frequency response shape)
+        // Use the average magnitude as the reference level
+        let totalMag = 0;
+        let validCount = 0;
+        for (let i = 0; i < data.magnitudes.length; i++) {
+            if (data.magnitudes[i] > 0.01) { // Ignore very quiet samples
+                totalMag += data.magnitudes[i];
+                validCount++;
+            }
+        }
+        const averageMagnitude = validCount > 0 ? totalMag / validCount : 0.5;
+
         const minF = 20;
         const maxF = 20000;
         const minLog = Math.log10(minF);
@@ -212,15 +222,15 @@ function DeviationGraph({ data }: { data: AnalysisResult }) {
             const freq = data.frequencies[i];
             const mag = data.magnitudes[i];
 
-            // Convert to dB deviation
-            const deviationDB = mag > 0 ? 20 * Math.log10(mag / idealMagnitude) : -60;
+            // Convert to dB deviation from average
+            const deviationDB = mag > 0.001 ? 20 * Math.log10(mag / averageMagnitude) : -60;
 
             const x1 = getX(freq);
             const y1 = h / 2 - (deviationDB / 24) * h; // Map ±12dB to canvas
 
             const nextFreq = data.frequencies[i + 1];
             const nextMag = data.magnitudes[i + 1];
-            const nextDeviationDB = nextMag > 0 ? 20 * Math.log10(nextMag / idealMagnitude) : -60;
+            const nextDeviationDB = nextMag > 0.001 ? 20 * Math.log10(nextMag / averageMagnitude) : -60;
             const x2 = getX(nextFreq);
             const y2 = h / 2 - (nextDeviationDB / 24) * h;
 
